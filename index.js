@@ -18,4 +18,28 @@ io.on("connection", (socket) => {
   socket.on("echo", (message) => {
     socket.emit("echo", message);
   });
+
+  socket.on('loggedIn', function (user) {
+    console.log(user.id + ' has logged in')
+    socket.join(user.id)
+
+    if (user.type == 'A') {
+      socket.join('administrator')
+    }
+  })
+
+  socket.on('loggedOut', function (user) {
+    socket.leave(user.id)
+    socket.leave('administrator')
+  })
+
+  socket.on('NewTransaction', function (transaction) {
+    console.log(parseInt(transaction.payment_reference))
+
+    //enviar para todos
+
+    //convert string to int
+    socket.to(parseInt(transaction.payment_reference)).emit('NewTransaction', transaction)
+  })
+
 });
