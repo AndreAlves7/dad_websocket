@@ -38,8 +38,15 @@ io.on("connection", (socket) => {
 
     //enviar para todos
 
+    if(transaction.type == 'C'){
+      //vcard
+      socket.to(parseInt(transaction.vcard)).emit('NewTransaction', transaction)
+    }else{
+      socket.to(parseInt(transaction.payment_reference)).emit('NewTransaction', transaction)
+    }
+
     //convert string to int
-    socket.to(parseInt(transaction.payment_reference)).emit('NewTransaction', transaction)
+    
   })
 
 });
